@@ -45,13 +45,16 @@ class AppDatabase extends _$AppDatabase {
 
   Future<List<SignalReading>> readingsSince(String deviceKey, DateTime cutoff) {
     return (select(signalReadings)
-          ..where((r) => r.deviceKey.equals(deviceKey) & r.at.isBiggerOrEqualValue(cutoff))
+          ..where((r) =>
+              r.deviceKey.equals(deviceKey) & r.at.isBiggerOrEqualValue(cutoff))
           ..orderBy([(r) => OrderingTerm.asc(r.at)]))
         .get();
   }
 
   Future<int> deleteOlderThan(DateTime cutoff) {
-    return (delete(signalReadings)..where((r) => r.at.isSmallerThanValue(cutoff))).go();
+    return (delete(signalReadings)
+          ..where((r) => r.at.isSmallerThanValue(cutoff)))
+        .go();
   }
 
   Future<List<Device>> recentDevices(int limit) {

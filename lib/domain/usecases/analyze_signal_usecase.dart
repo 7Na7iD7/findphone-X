@@ -7,7 +7,8 @@ class AnalyzeSignalUseCase {
 
   const AnalyzeSignalUseCase({this.pathLoss = const PathLossModel()});
 
-  double estimateDistanceMeters(int rssi) => pathLoss.distanceMeters(rssi.toDouble());
+  double estimateDistanceMeters(int rssi) =>
+      pathLoss.distanceMeters(rssi.toDouble());
 
   Trend trendOf(List<Reading> readings, DateTime now) =>
       TrendCalculator.of(readings, now);

@@ -24,7 +24,8 @@ class AppSettings {
     this.language = AppLanguage.en,
   });
 
-  AppSettings copyWith({bool? redact, bool? soundEnabled, AppLanguage? language}) {
+  AppSettings copyWith(
+      {bool? redact, bool? soundEnabled, AppLanguage? language}) {
     return AppSettings(
       redact: redact ?? this.redact,
       soundEnabled: soundEnabled ?? this.soundEnabled,
@@ -64,7 +65,8 @@ class AppSettingsController extends StateNotifier<AppSettings> {
   Future<void> setLanguage(AppLanguage language) async {
     if (language == state.language) return;
     state = state.copyWith(language: language);
-    (await SharedPreferences.getInstance()).setString(_kLanguage, language.code);
+    (await SharedPreferences.getInstance())
+        .setString(_kLanguage, language.code);
   }
 }
 

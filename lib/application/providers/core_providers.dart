@@ -34,7 +34,8 @@ final trackDeviceUseCaseProvider = Provider<TrackDeviceUseCase>((ref) {
   return TrackDeviceUseCase(ref.watch(bleRepositoryAbstractProvider));
 });
 
-final getPairedDevicesUseCaseProvider = Provider<GetPairedDevicesUseCase>((ref) {
+final getPairedDevicesUseCaseProvider =
+    Provider<GetPairedDevicesUseCase>((ref) {
   return GetPairedDevicesUseCase(ref.watch(bleRepositoryAbstractProvider));
 });
 

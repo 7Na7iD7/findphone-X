@@ -58,7 +58,8 @@ class SurveyScreen extends ConsumerWidget {
               final a = devices[i];
               final live = a.smoothed.round();
               final tone = toneForRssi(live);
-              final stale = DateTime.now().difference(a.last) > const Duration(seconds: 3);
+              final stale = DateTime.now().difference(a.last) >
+                  const Duration(seconds: 3);
               return Padding(
                 padding: const EdgeInsets.symmetric(vertical: 8),
                 child: Column(
@@ -66,18 +67,21 @@ class SurveyScreen extends ConsumerWidget {
                   children: [
                     Row(
                       children: [
-                        Text('${i + 1}.', style: const TextStyle(color: Colors.white38)),
+                        Text('${i + 1}.',
+                            style: const TextStyle(color: Colors.white38)),
                         const SizedBox(width: 8),
                         Expanded(
                           child: Text(
                             redact ? l10n.t('unknownDevice') : a.label,
-                            style: const TextStyle(color: Colors.white, fontSize: 16),
+                            style: const TextStyle(
+                                color: Colors.white, fontSize: 16),
                             overflow: TextOverflow.ellipsis,
                           ),
                         ),
                         Text(
                           '$live dBm${stale ? l10n.t('staleSuffix') : ""}',
-                          style: TextStyle(color: tone, fontWeight: FontWeight.bold),
+                          style: TextStyle(
+                              color: tone, fontWeight: FontWeight.bold),
                         ),
                       ],
                     ),
@@ -86,7 +90,8 @@ class SurveyScreen extends ConsumerWidget {
                     const SizedBox(height: 4),
                     Text(
                       Proximity.describe(live),
-                      style: TextStyle(color: tone.withValues(alpha: 0.8), fontSize: 12),
+                      style: TextStyle(
+                          color: tone.withValues(alpha: 0.8), fontSize: 12),
                     ),
                   ],
                 ),

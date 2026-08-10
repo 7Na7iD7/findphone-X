@@ -82,14 +82,16 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             SwitchListTile(
               value: settings.soundEnabled,
               onChanged: settingsController.setSound,
-              title: Text(l10n.t('soundEnabledLabel'), style: const TextStyle(color: Colors.white)),
+              title: Text(l10n.t('soundEnabledLabel'),
+                  style: const TextStyle(color: Colors.white)),
               activeThumbColor: Colors.greenAccent,
               contentPadding: EdgeInsets.zero,
             ),
             SwitchListTile(
               value: settings.redact,
               onChanged: settingsController.setRedact,
-              title: Text(l10n.t('redactLabel'), style: const TextStyle(color: Colors.white)),
+              title: Text(l10n.t('redactLabel'),
+                  style: const TextStyle(color: Colors.white)),
               activeThumbColor: Colors.greenAccent,
               contentPadding: EdgeInsets.zero,
             ),
@@ -112,7 +114,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 } else {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (_) => HuntScreen(targetName: name)),
+                    MaterialPageRoute(
+                        builder: (_) => HuntScreen(targetName: name)),
                   );
                 }
               },
@@ -132,7 +135,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 if (!mounted) return;
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (_) => const PairedDevicesScreen()),
+                  MaterialPageRoute(
+                      builder: (_) => const PairedDevicesScreen()),
                 );
               },
               child: Text(l10n.t('pairedDevicesButton')),

@@ -19,7 +19,8 @@ void main() {
 
   test('recordReading stores a reading retrievable by device key', () async {
     final reading = Reading(rssi: -60, at: DateTime.now(), source: 'advert');
-    await repo.recordReading(deviceKey: 'abc', deviceLabel: 'iPhone', reading: reading);
+    await repo.recordReading(
+        deviceKey: 'abc', deviceLabel: 'iPhone', reading: reading);
 
     final stored = await repo.readingsFor('abc');
     expect(stored.length, 1);
@@ -34,10 +35,13 @@ void main() {
     );
     final recent = Reading(rssi: -55, at: DateTime.now(), source: 'advert');
 
-    await repo.recordReading(deviceKey: 'abc', deviceLabel: 'iPhone', reading: old);
-    await repo.recordReading(deviceKey: 'abc', deviceLabel: 'iPhone', reading: recent);
+    await repo.recordReading(
+        deviceKey: 'abc', deviceLabel: 'iPhone', reading: old);
+    await repo.recordReading(
+        deviceKey: 'abc', deviceLabel: 'iPhone', reading: recent);
 
-    final filtered = await repo.readingsFor('abc', within: const Duration(minutes: 30));
+    final filtered =
+        await repo.readingsFor('abc', within: const Duration(minutes: 30));
     expect(filtered.length, 1);
     expect(filtered.first.rssi, -55);
   });
@@ -48,7 +52,8 @@ void main() {
       at: DateTime.now().subtract(const Duration(days: 2)),
       source: 'advert',
     );
-    await repo.recordReading(deviceKey: 'abc', deviceLabel: 'iPhone', reading: old);
+    await repo.recordReading(
+        deviceKey: 'abc', deviceLabel: 'iPhone', reading: old);
     await repo.pruneOlderThan(const Duration(days: 1));
 
     final remaining = await repo.readingsFor('abc');

@@ -45,8 +45,10 @@ class PairedDevicesScreen extends ConsumerWidget {
               final d = devices[i];
               final address = redact ? _maskAddress(d.id) : d.id;
               return ListTile(
-                title: Text(d.name, style: const TextStyle(color: Colors.white)),
-                subtitle: Text(address, style: const TextStyle(color: Colors.white38)),
+                title:
+                    Text(d.name, style: const TextStyle(color: Colors.white)),
+                subtitle: Text(address,
+                    style: const TextStyle(color: Colors.white38)),
                 trailing: Text(
                   d.connected ? l10n.t('connected') : l10n.t('disconnected'),
                   style: TextStyle(

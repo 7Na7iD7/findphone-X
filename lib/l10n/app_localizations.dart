@@ -52,7 +52,8 @@ class AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {
       .contains(locale.languageCode);
 
   @override
-  Future<AppLocalizations> load(Locale locale) async => AppLocalizations(locale);
+  Future<AppLocalizations> load(Locale locale) async =>
+      AppLocalizations(locale);
 
   @override
   bool shouldReload(AppLocalizationsDelegate old) => false;

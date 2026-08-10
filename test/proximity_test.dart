@@ -28,10 +28,22 @@ void main() {
     test('detects warmer trend when signal strengthens', () {
       final now = DateTime.now();
       final readings = <Reading>[
-        Reading(rssi: -80, at: now.subtract(const Duration(seconds: 10)), source: 't'),
-        Reading(rssi: -82, at: now.subtract(const Duration(seconds: 9)), source: 't'),
-        Reading(rssi: -50, at: now.subtract(const Duration(seconds: 2)), source: 't'),
-        Reading(rssi: -48, at: now.subtract(const Duration(seconds: 1)), source: 't'),
+        Reading(
+            rssi: -80,
+            at: now.subtract(const Duration(seconds: 10)),
+            source: 't'),
+        Reading(
+            rssi: -82,
+            at: now.subtract(const Duration(seconds: 9)),
+            source: 't'),
+        Reading(
+            rssi: -50,
+            at: now.subtract(const Duration(seconds: 2)),
+            source: 't'),
+        Reading(
+            rssi: -48,
+            at: now.subtract(const Duration(seconds: 1)),
+            source: 't'),
       ];
       expect(TrendCalculator.of(readings, now), Trend.warmer);
     });
@@ -39,10 +51,22 @@ void main() {
     test('detects colder trend when signal weakens', () {
       final now = DateTime.now();
       final readings = <Reading>[
-        Reading(rssi: -45, at: now.subtract(const Duration(seconds: 10)), source: 't'),
-        Reading(rssi: -46, at: now.subtract(const Duration(seconds: 9)), source: 't'),
-        Reading(rssi: -80, at: now.subtract(const Duration(seconds: 2)), source: 't'),
-        Reading(rssi: -82, at: now.subtract(const Duration(seconds: 1)), source: 't'),
+        Reading(
+            rssi: -45,
+            at: now.subtract(const Duration(seconds: 10)),
+            source: 't'),
+        Reading(
+            rssi: -46,
+            at: now.subtract(const Duration(seconds: 9)),
+            source: 't'),
+        Reading(
+            rssi: -80,
+            at: now.subtract(const Duration(seconds: 2)),
+            source: 't'),
+        Reading(
+            rssi: -82,
+            at: now.subtract(const Duration(seconds: 1)),
+            source: 't'),
       ];
       expect(TrendCalculator.of(readings, now), Trend.colder);
     });

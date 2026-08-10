@@ -25,7 +25,8 @@ class HistoryRepositoryImpl implements HistoryRepository {
   }
 
   @override
-  Future<List<Reading>> readingsFor(String deviceKey, {Duration? within}) async {
+  Future<List<Reading>> readingsFor(String deviceKey,
+      {Duration? within}) async {
     final cutoff = within == null
         ? DateTime.fromMillisecondsSinceEpoch(0)
         : DateTime.now().subtract(within);

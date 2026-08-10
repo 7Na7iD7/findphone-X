@@ -43,12 +43,15 @@ class _HuntScreenState extends ConsumerState<HuntScreen> {
     switch (trend) {
       case Trend.warmer:
         return Text(l10n.t('trendWarmer'),
-            style: const TextStyle(color: Colors.greenAccent, fontWeight: FontWeight.bold));
+            style: const TextStyle(
+                color: Colors.greenAccent, fontWeight: FontWeight.bold));
       case Trend.colder:
         return Text(l10n.t('trendColder'),
-            style: const TextStyle(color: Colors.redAccent, fontWeight: FontWeight.bold));
+            style: const TextStyle(
+                color: Colors.redAccent, fontWeight: FontWeight.bold));
       case Trend.steady:
-        return Text(l10n.t('trendSteady'), style: const TextStyle(color: Colors.white38));
+        return Text(l10n.t('trendSteady'),
+            style: const TextStyle(color: Colors.white38));
       case Trend.unknown:
         return const SizedBox.shrink();
     }
@@ -93,10 +96,12 @@ class _HuntScreenState extends ConsumerState<HuntScreen> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Icon(Icons.bluetooth_searching, color: Colors.white24, size: 48),
+                  const Icon(Icons.bluetooth_searching,
+                      color: Colors.white24, size: 48),
                   const SizedBox(height: 16),
                   Text(
-                    l10n.tp('noSignalYet', {'count': '${data.advertisers.length}'}),
+                    l10n.tp(
+                        'noSignalYet', {'count': '${data.advertisers.length}'}),
                     style: const TextStyle(color: Colors.white54),
                     textAlign: TextAlign.center,
                   ),
@@ -111,15 +116,19 @@ class _HuntScreenState extends ConsumerState<HuntScreen> {
             );
           }
 
-          ref.read(clickerControllerProvider.notifier).update(data.isFresh ? live : null);
+          ref
+              .read(clickerControllerProvider.notifier)
+              .update(data.isFresh ? live : null);
 
           final tone = toneForRssi(live);
           final trend = analyzeUseCase.trendOf(data.readings, data.at);
-          final lastMinute = data.readings.since(const Duration(seconds: 60), data.at);
+          final lastMinute =
+              data.readings.since(const Duration(seconds: 60), data.at);
           final peak = lastMinute.peakRssi ?? live;
           final distance = analyzeUseCase.estimateDistanceMeters(live);
           final stale = data.readings.isNotEmpty &&
-              data.at.difference(data.readings.last.at) > const Duration(seconds: 15);
+              data.at.difference(data.readings.last.at) >
+                  const Duration(seconds: 15);
 
           return Padding(
             padding: const EdgeInsets.all(20),
@@ -129,13 +138,18 @@ class _HuntScreenState extends ConsumerState<HuntScreen> {
                 BigNumber(value: live, color: tone),
                 const SizedBox(height: 4),
                 Text(
-                  l10n.tp('distanceApprox', {'distance': distance.toStringAsFixed(1)}),
-                  style: TextStyle(color: tone.withValues(alpha: 0.7), fontSize: 13),
+                  l10n.tp('distanceApprox',
+                      {'distance': distance.toStringAsFixed(1)}),
+                  style: TextStyle(
+                      color: tone.withValues(alpha: 0.7), fontSize: 13),
                 ),
                 const SizedBox(height: 8),
                 Text(
                   Proximity.describe(live),
-                  style: TextStyle(color: tone, fontWeight: FontWeight.bold, letterSpacing: 1.2),
+                  style: TextStyle(
+                      color: tone,
+                      fontWeight: FontWeight.bold,
+                      letterSpacing: 1.2),
                 ),
                 const SizedBox(height: 8),
                 _trendChip(trend, l10n),
@@ -165,7 +179,8 @@ class _HuntScreenState extends ConsumerState<HuntScreen> {
                     padding: const EdgeInsets.only(top: 8),
                     child: Text(
                       l10n.t('staleWarning'),
-                      style: const TextStyle(color: Colors.orangeAccent, fontSize: 12),
+                      style: const TextStyle(
+                          color: Colors.orangeAccent, fontSize: 12),
                     ),
                   ),
                 const Spacer(),

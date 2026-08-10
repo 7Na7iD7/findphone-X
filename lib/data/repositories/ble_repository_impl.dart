@@ -53,7 +53,8 @@ class BleRepositoryImpl implements BleRepository {
       _bluetoothOn = state == BluetoothAdapterState.on;
       _radioIssue = switch (state) {
         BluetoothAdapterState.on => null,
-        BluetoothAdapterState.off => 'Bluetooth is off. Waiting for it to come back on.',
+        BluetoothAdapterState.off =>
+          'Bluetooth is off. Waiting for it to come back on.',
         BluetoothAdapterState.unauthorized => 'Bluetooth permission denied.',
         _ => 'Bluetooth unavailable.',
       };
@@ -114,7 +115,8 @@ class BleRepositoryImpl implements BleRepository {
     _emit();
   }
 
-  void _record(int rssi, String source, {String? deviceKey, String? deviceLabel}) {
+  void _record(int rssi, String source,
+      {String? deviceKey, String? deviceLabel}) {
     if (rssi >= 0 || rssi <= -127) return;
     final reading = Reading(
       rssi: rssi,
@@ -137,7 +139,8 @@ class BleRepositoryImpl implements BleRepository {
   void _prune() {
     final now = DateTime.now();
     _readings.removeWhere((r) => now.difference(r.at) >= _historyWindow);
-    _advertisers.removeWhere((_, a) => now.difference(a.last) >= _advertiserTtl);
+    _advertisers
+        .removeWhere((_, a) => now.difference(a.last) >= _advertiserTtl);
     _emit();
   }
 

@@ -212,10 +212,12 @@ class _DeveloperTile extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(developer.name,
-                        style: const TextStyle(color: Colors.white, fontSize: 15)),
+                        style:
+                            const TextStyle(color: Colors.white, fontSize: 15)),
                     const SizedBox(height: 2),
                     Text(developer.handle,
-                        style: const TextStyle(color: Colors.white38, fontSize: 12)),
+                        style: const TextStyle(
+                            color: Colors.white38, fontSize: 12)),
                   ],
                 ),
               ),

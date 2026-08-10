@@ -4,7 +4,8 @@ import 'package:findphonex/core/path_loss.dart';
 void main() {
   group('PathLossModel', () {
     test('rssi equal to measured power at 1m returns ~1 meter', () {
-      const model = PathLossModel(measuredPowerAt1m: -59, pathLossExponent: 2.5);
+      const model =
+          PathLossModel(measuredPowerAt1m: -59, pathLossExponent: 2.5);
       final d = model.distanceMeters(-59);
       expect(d, closeTo(1.0, 0.01));
     });
@@ -16,7 +17,8 @@ void main() {
       expect(far, greaterThan(near));
     });
 
-    test('indoor cluttered exponent yields smaller distance than open space', () {
+    test('indoor cluttered exponent yields smaller distance than open space',
+        () {
       final rssi = -75.0;
       final open = PathLossModel.openSpace.distanceMeters(rssi);
       final cluttered = PathLossModel.indoorCluttered.distanceMeters(rssi);
