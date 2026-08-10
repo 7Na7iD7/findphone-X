@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../application/providers/paired_devices_provider.dart';
 import '../../application/providers/settings_provider.dart';
+import '../../l10n/app_localizations.dart';
 
 class PairedDevicesScreen extends ConsumerWidget {
   const PairedDevicesScreen({super.key});
@@ -12,11 +13,12 @@ class PairedDevicesScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final devicesAsync = ref.watch(pairedDevicesProvider);
     final redact = ref.watch(appSettingsProvider).redact;
+    final l10n = context.l10n;
 
     return Scaffold(
       backgroundColor: Colors.black,
       appBar: AppBar(
-        title: const Text('دستگاه‌های جفت‌شده'),
+        title: Text(l10n.t('pairedDevicesTitle')),
         backgroundColor: Colors.black,
         foregroundColor: Colors.white,
       ),
@@ -25,13 +27,14 @@ class PairedDevicesScreen extends ConsumerWidget {
           child: CircularProgressIndicator(color: Colors.greenAccent),
         ),
         error: (err, st) => Center(
-          child: Text('خطا: $err', style: const TextStyle(color: Colors.white70)),
+          child: Text(l10n.tp('errorPrefix', {'error': '$err'}),
+              style: const TextStyle(color: Colors.white70)),
         ),
         data: (devices) {
           if (devices.isEmpty) {
-            return const Center(
-              child: Text('هیچ دستگاه جفت‌شده‌ای پیدا نشد.',
-                  style: TextStyle(color: Colors.white38)),
+            return Center(
+              child: Text(l10n.t('noPairedDevices'),
+                  style: const TextStyle(color: Colors.white38)),
             );
           }
           return ListView.separated(
@@ -45,7 +48,7 @@ class PairedDevicesScreen extends ConsumerWidget {
                 title: Text(d.name, style: const TextStyle(color: Colors.white)),
                 subtitle: Text(address, style: const TextStyle(color: Colors.white38)),
                 trailing: Text(
-                  d.connected ? 'متصل' : 'غیرمتصل',
+                  d.connected ? l10n.t('connected') : l10n.t('disconnected'),
                   style: TextStyle(
                     color: d.connected ? Colors.greenAccent : Colors.white24,
                     fontSize: 12,

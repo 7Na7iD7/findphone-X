@@ -10,12 +10,13 @@
 [![Dart](https://img.shields.io/badge/Dart-3.3+-0175C2?style=for-the-badge&logo=dart&logoColor=white)](https://dart.dev)
 [![Riverpod](https://img.shields.io/badge/Riverpod-State%20Mgmt-4f8ef7?style=for-the-badge)](https://riverpod.dev)
 [![Drift](https://img.shields.io/badge/Drift-SQLite-00A500?style=for-the-badge)](https://drift.simonbinder.eu)
+[![i18n](https://img.shields.io/badge/i18n-EN%20%2F%20FA-4f8ef7?style=for-the-badge)](#-localization)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge)](LICENSE)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=for-the-badge)](http://makeapullrequest.com)
 
 **Scan • Filter • Estimate • Guide**
 
-[Features](#-features) • [Installation](#️-installation) • [Quick Start](#-quick-start) • [Project Structure](#-project-structure) • [CI/CD](#-cicd) • [Contributing](#-contributing)
+[Features](#-features) • [Localization](#-localization) • [Installation](#️-installation) • [Quick Start](#-quick-start) • [Project Structure](#-project-structure) • [CI/CD](#-cicd) • [Contributing](#-contributing)
 
 </div>
 
@@ -25,15 +26,15 @@
 
 **findphone X** is a mobile tool for locating a nearby Bluetooth device by its signal strength — built for the case where Find My or an equivalent is unavailable (for example, a device enrolled in MDM), but the device is still within Bluetooth range and you just need to know which corner of the room it's in.
 
-Originally a macOS command-line tool built on CoreBluetooth, findphone was rebuilt from the ground up as a Flutter app with clean architecture, a real Kalman filter for signal smoothing, a path-loss model for distance estimation, local persistence, and background scanning — not just a UI port.
+Originally a macOS command-line tool built on CoreBluetooth, findphone was rebuilt from the ground up as a Flutter app with clean architecture, a real Kalman filter for signal smoothing, a path-loss model for distance estimation, local persistence, background scanning, and a fully bilingual (English/Persian) interface — not just a UI port.
 
 <div align="center">
 
 ### 🎯 **Why This Tool?**
 
-| **Real Filtering** | **Clean Architecture** | **Persisted History** | **Background Aware** |
-|:---:|:---:|:---:|:---:|
-| Kalman filter, not a raw average | domain/data/presentation, fully testable | Drift/SQLite, not just in-memory | Keeps scanning while minimized |
+| **Real Filtering** | **Clean Architecture** | **Persisted History** | **Background Aware** | **Bilingual** |
+|:---:|:---:|:---:|:---:|:---:|
+| Kalman filter, not a raw average | domain/data/presentation, fully testable | Drift/SQLite, not just in-memory | Keeps scanning while minimized | English & Persian, switchable in Settings |
 
 </div>
 
@@ -98,6 +99,23 @@ Lists bonded and system-known Bluetooth devices with live connection state — a
 ### 🕶 Redact Mode
 
 Masks Bluetooth addresses and, in survey mode, falls back to device kind instead of name — for screen recording. Distance and trend stay visible; addresses do not.
+
+### ⚙️ Settings
+
+A dedicated Settings screen (reached from the gear icon on Home) holds everything that used to be scattered on the home screen, plus the language switch:
+
+- **Language** — segmented English / فارسی control; changes the whole app's copy and text direction (LTR/RTL) instantly, no restart needed
+- **Proximity sound** and **Redact mode** toggles
+- **Developers** — cards for the people who built this, linking straight to their GitHub profiles
+
+### 🌐 Localization
+
+The UI is fully bilingual out of the box:
+
+- **English** is the default language on first launch
+- **فارسی (Persian)** is one tap away in Settings, with the layout mirroring to RTL automatically
+- The chosen language is persisted (`shared_preferences`) and restored on next launch
+- No codegen step — a lightweight `AppLocalizations` lookup (`lib/l10n/`) maps string keys to per-language tables, so adding a third language is just a new map + a registered `Locale`
 
 ### 📊 Local History (Drift/SQLite)
 
@@ -184,9 +202,15 @@ flutter run
 ### Hunt a specific device
 
 1. Enter a device name (case-insensitive match against advertised names)
-2. Optionally enable **Sound** for proximity clicks
+2. Optionally enable **Sound** for proximity clicks (in Settings)
 3. Tap **Track this device**
 4. Watch the big dBm number, estimated distance, and trend arrow as you move
+
+### Switch language
+
+1. Tap the ⚙️ gear icon on the Home screen
+2. Tap **فارسی** or **English** in the Language switch
+3. Done — the whole app, including text direction, updates immediately
 
 ---
 
@@ -195,35 +219,47 @@ flutter run
 ```
 findphone/
 ├── lib/
-│   ├── main.dart                    # Entry point — ProviderScope + MaterialApp
+│   ├── main.dart                      # Entry point — ProviderScope + MaterialApp,
+│   │                                   # wires locale + LTR/RTL direction
 │   │
-│   ├── core/                        # Pure logic, no Flutter dependency
-│   │   ├── kalman_filter.dart       # 1D Kalman filter for RSSI smoothing
-│   │   └── path_loss.dart           # Path-loss model → estimated distance
+│   ├── l10n/                          # Lightweight, codegen-free localization
+│   │   ├── app_localizations.dart     # AppLocalizations + context.l10n.t()/.tp()
+│   │   ├── strings_en.dart            # English strings (default)
+│   │   └── strings_fa.dart            # Persian strings
 │   │
-│   ├── domain/                      # Framework-independent domain layer
-│   │   ├── entities/                # Reading, Advertiser, Proximity, TrackerSnapshot
-│   │   ├── repositories/            # BleRepository, HistoryRepository (abstract)
-│   │   └── usecases/                # TrackDevice, GetPairedDevices, AnalyzeSignal
+│   ├── core/                          # Pure logic, no Flutter dependency
+│   │   ├── kalman_filter.dart         # 1D Kalman filter for RSSI smoothing
+│   │   └── path_loss.dart             # Path-loss model → estimated distance
 │   │
-│   ├── data/                        # Real implementations
-│   │   ├── local/app_database.dart  # Drift (SQLite) schema
-│   │   └── repositories/            # BleRepositoryImpl, HistoryRepositoryImpl
+│   ├── domain/                        # Framework-independent domain layer
+│   │   ├── entities/                  # Reading, Advertiser, Proximity, TrackerSnapshot
+│   │   ├── repositories/              # BleRepository, HistoryRepository (abstract)
+│   │   └── usecases/                  # TrackDevice, GetPairedDevices, AnalyzeSignal
 │   │
-│   ├── application/providers/       # Riverpod providers — DI and state
+│   ├── data/                          # Real implementations
+│   │   ├── local/app_database.dart    # Drift (SQLite) schema
+│   │   └── repositories/              # BleRepositoryImpl, HistoryRepositoryImpl
+│   │
+│   ├── application/providers/         # Riverpod providers — DI and state
+│   │                                   # (appSettingsProvider now also holds
+│   │                                   #  + persists the active language)
 │   │
 │   ├── presentation/
-│   │   ├── screens/                 # Home · Survey · Hunt · PairedDevices
-│   │   └── widgets/                 # BigNumber · SignalBar · Sparkline
+│   │   ├── screens/                   # Home · Survey · Hunt · PairedDevices · Settings
+│   │   └── widgets/                   # BigNumber · SignalBar · Sparkline
 │   │
-│   └── services/                    # Clicker (sound), BackgroundScanService, Permissions
+│   └── services/                      # Clicker (sound), BackgroundScanService, Permissions
 │
-├── test/                            # Unit tests — core, domain, data
-├── .github/workflows/               # ci.yml · release.yml
+├── test/                              # Unit tests — core, domain, data
+├── .github/workflows/                 # ci.yml · release.yml
 └── pubspec.yaml
 ```
 
 ### Architecture Overview
+
+**`l10n/`**
+- `AppLocalizations` — a plain key→string lookup per `Locale`, with `{placeholder}` interpolation for dynamic strings (distances, counts, errors); no `.arb` files or generated code
+- English is the fallback for any missing key, so a partial translation never crashes the UI
 
 **`core/`**
 - `KalmanFilter1D` — smooths noisy RSSI without the lag of a plain moving average
@@ -239,10 +275,12 @@ findphone/
 
 **`application/providers/`**
 - `trackerSnapshotProvider` — `StreamProvider.family` keyed by target device name
-- `clickerControllerProvider`, `appSettingsProvider`, `pairedDevicesProvider`
+- `clickerControllerProvider`, `pairedDevicesProvider`
+- `appSettingsProvider` — sound, redact, and the active `AppLanguage`, persisted via `shared_preferences`
 
 **`presentation/`**
 - `ConsumerWidget` screens driven entirely by provider state — no direct BLE calls from the UI
+- `SettingsScreen` centralizes language, sound, redact, and developer credits
 
 ---
 
@@ -300,6 +338,13 @@ Some OEM battery-optimization settings kill foreground services aggressively. Wh
 </details>
 
 <details>
+<summary><b>App opened in the wrong language</b></summary>
+
+English is the default on first launch. If it starts in Persian, the device previously had a language saved in Settings — switch it back from the gear icon, or clear the app's local storage to reset to the default.
+
+</details>
+
+<details>
 <summary><b>Build fails after pulling changes</b></summary>
 
 Drift and Riverpod generate code that can go stale:
@@ -338,8 +383,8 @@ git push origin feature/your-feature-name
 | 📡 **Scanning** | iOS background scan refinements, BLE mesh handling |
 | 🗜️ **Filtering** | Adaptive Kalman parameters, per-device calibration |
 | 🎨 **UI** | Compass-style bearing hints, haptic feedback |
-| 🌐 **i18n** | Full localization beyond Persian strings |
-| 🧪 **Tests** | Widget tests for hunt/survey screens |
+| 🌐 **i18n** | Additional languages beyond English/Persian |
+| 🧪 **Tests** | Widget tests for hunt/survey/settings screens |
 | 📖 **Docs** | Calibration guide for `PathLossModel` |
 
 ---
@@ -365,6 +410,19 @@ This project is licensed under the **MIT License**. See the [LICENSE](LICENSE) f
 **flutter_blue_plus maintainers** | **Flutter Community** | **Open Source Contributors**
 :---: | :---: | :---:
 Reliable cross-platform BLE scanning | Amazing ecosystem and tooling | Riverpod, Drift, flutter_foreground_task and more
+
+</div>
+
+---
+
+## 👨‍💻 Developers
+
+<div align="center">
+
+| | |
+|:---:|:---:|
+| **Navid Afzali** | **Niki Farzami** |
+| [![GitHub](https://img.shields.io/badge/GitHub-7Na7iD7-181717?style=for-the-badge&logo=github&logoColor=white)](https://github.com/7Na7iD7) | [![GitHub](https://img.shields.io/badge/GitHub-nikifarzami-181717?style=for-the-badge&logo=github&logoColor=white)](https://github.com/nikifarzami) |
 
 </div>
 

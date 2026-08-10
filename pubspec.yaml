@@ -9,6 +9,8 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  flutter_localizations:
+    sdk: flutter
   flutter_blue_plus: ^1.32.12
   audioplayers: ^6.1.0
   permission_handler: ^11.3.1
@@ -20,6 +22,8 @@ dependencies:
   path: ^1.9.0
   flutter_foreground_task: ^8.10.4
   logger: ^2.4.0
+  shared_preferences: ^2.3.2
+  url_launcher: ^6.3.1
 
 dev_dependencies:
   flutter_test:

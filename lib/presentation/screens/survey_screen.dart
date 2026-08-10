@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../application/providers/tracker_providers.dart';
 import '../../application/providers/settings_provider.dart';
 import '../../domain/entities/proximity.dart';
+import '../../l10n/app_localizations.dart';
 import '../widgets/signal_bar.dart';
 import '../widgets/tone.dart';
 
@@ -13,11 +14,12 @@ class SurveyScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final snapshotAsync = ref.watch(trackerSnapshotProvider(null));
     final redact = ref.watch(appSettingsProvider).redact;
+    final l10n = context.l10n;
 
     return Scaffold(
       backgroundColor: Colors.black,
       appBar: AppBar(
-        title: const Text('جستجوی دستگاه‌ها'),
+        title: Text(l10n.t('surveyTitle')),
         backgroundColor: Colors.black,
         foregroundColor: Colors.white,
       ),
@@ -26,7 +28,8 @@ class SurveyScreen extends ConsumerWidget {
           child: CircularProgressIndicator(color: Colors.greenAccent),
         ),
         error: (err, st) => Center(
-          child: Text('خطا: $err', style: const TextStyle(color: Colors.white70)),
+          child: Text(l10n.tp('errorPrefix', {'error': '$err'}),
+              style: const TextStyle(color: Colors.white70)),
         ),
         data: (data) {
           if (data.radioIssue != null) {
@@ -40,10 +43,10 @@ class SurveyScreen extends ConsumerWidget {
           }
           final devices = data.sortedAdvertisers;
           if (devices.isEmpty) {
-            return const Center(
+            return Center(
               child: Text(
-                'هنوز چیزی پیدا نشد — چند ثانیه صبر کن',
-                style: TextStyle(color: Colors.white38),
+                l10n.t('surveyEmpty'),
+                style: const TextStyle(color: Colors.white38),
               ),
             );
           }
@@ -67,13 +70,13 @@ class SurveyScreen extends ConsumerWidget {
                         const SizedBox(width: 8),
                         Expanded(
                           child: Text(
-                            redact ? 'دستگاه ناشناس' : a.label,
+                            redact ? l10n.t('unknownDevice') : a.label,
                             style: const TextStyle(color: Colors.white, fontSize: 16),
                             overflow: TextOverflow.ellipsis,
                           ),
                         ),
                         Text(
-                          '$live dBm${stale ? " (قدیمی)" : ""}',
+                          '$live dBm${stale ? l10n.t('staleSuffix') : ""}',
                           style: TextStyle(color: tone, fontWeight: FontWeight.bold),
                         ),
                       ],

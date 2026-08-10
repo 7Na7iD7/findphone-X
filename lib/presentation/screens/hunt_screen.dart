@@ -6,6 +6,7 @@ import '../../application/providers/clicker_provider.dart';
 import '../../application/providers/core_providers.dart';
 import '../../domain/entities/proximity.dart';
 import '../../domain/entities/reading.dart';
+import '../../l10n/app_localizations.dart';
 import '../widgets/big_number.dart';
 import '../widgets/signal_bar.dart';
 import '../widgets/sparkline.dart';
@@ -38,16 +39,16 @@ class _HuntScreenState extends ConsumerState<HuntScreen> {
     super.dispose();
   }
 
-  Widget _trendChip(Trend trend) {
+  Widget _trendChip(Trend trend, AppLocalizations l10n) {
     switch (trend) {
       case Trend.warmer:
-        return const Text('▲ نزدیک‌تر می‌شود',
-            style: TextStyle(color: Colors.greenAccent, fontWeight: FontWeight.bold));
+        return Text(l10n.t('trendWarmer'),
+            style: const TextStyle(color: Colors.greenAccent, fontWeight: FontWeight.bold));
       case Trend.colder:
-        return const Text('▼ دورتر می‌شود',
-            style: TextStyle(color: Colors.redAccent, fontWeight: FontWeight.bold));
+        return Text(l10n.t('trendColder'),
+            style: const TextStyle(color: Colors.redAccent, fontWeight: FontWeight.bold));
       case Trend.steady:
-        return const Text('· ثابت', style: TextStyle(color: Colors.white38));
+        return Text(l10n.t('trendSteady'), style: const TextStyle(color: Colors.white38));
       case Trend.unknown:
         return const SizedBox.shrink();
     }
@@ -57,6 +58,7 @@ class _HuntScreenState extends ConsumerState<HuntScreen> {
   Widget build(BuildContext context) {
     final snapshotAsync = ref.watch(trackerSnapshotProvider(widget.targetName));
     final analyzeUseCase = ref.watch(analyzeSignalUseCaseProvider);
+    final l10n = context.l10n;
 
     return Scaffold(
       backgroundColor: Colors.black,
@@ -70,7 +72,8 @@ class _HuntScreenState extends ConsumerState<HuntScreen> {
           child: CircularProgressIndicator(color: Colors.greenAccent),
         ),
         error: (err, st) => Center(
-          child: Text('خطا: $err', style: const TextStyle(color: Colors.white70)),
+          child: Text(l10n.tp('errorPrefix', {'error': '$err'}),
+              style: const TextStyle(color: Colors.white70)),
         ),
         data: (data) {
           if (data.radioIssue != null) {
@@ -93,15 +96,14 @@ class _HuntScreenState extends ConsumerState<HuntScreen> {
                   const Icon(Icons.bluetooth_searching, color: Colors.white24, size: 48),
                   const SizedBox(height: 16),
                   Text(
-                    'هنوز سیگنالی نیست — ${data.advertisers.length} دستگاه دیگر در محدوده',
+                    l10n.tp('noSignalYet', {'count': '${data.advertisers.length}'}),
                     style: const TextStyle(color: Colors.white54),
                     textAlign: TextAlign.center,
                   ),
                   const SizedBox(height: 8),
-                  const Text(
-                    'اگر ادامه داشت یعنی دستگاه خاموش است، خارج از محدوده\n'
-                    'است (حدود ۱۰ تا ۲۰ متر) یا داخل چیزی فلزی است.',
-                    style: TextStyle(color: Colors.white24, fontSize: 12),
+                  Text(
+                    l10n.t('noSignalHint'),
+                    style: const TextStyle(color: Colors.white24, fontSize: 12),
                     textAlign: TextAlign.center,
                   ),
                 ],
@@ -127,7 +129,7 @@ class _HuntScreenState extends ConsumerState<HuntScreen> {
                 BigNumber(value: live, color: tone),
                 const SizedBox(height: 4),
                 Text(
-                  '~${distance.toStringAsFixed(1)} متر (تخمینی)',
+                  l10n.tp('distanceApprox', {'distance': distance.toStringAsFixed(1)}),
                   style: TextStyle(color: tone.withValues(alpha: 0.7), fontSize: 13),
                 ),
                 const SizedBox(height: 8),
@@ -136,7 +138,7 @@ class _HuntScreenState extends ConsumerState<HuntScreen> {
                   style: TextStyle(color: tone, fontWeight: FontWeight.bold, letterSpacing: 1.2),
                 ),
                 const SizedBox(height: 8),
-                _trendChip(trend),
+                _trendChip(trend, l10n),
                 const SizedBox(height: 24),
                 SignalBar(rssi: live, color: tone, height: 20),
                 const SizedBox(height: 24),
@@ -148,25 +150,28 @@ class _HuntScreenState extends ConsumerState<HuntScreen> {
                 ),
                 const SizedBox(height: 8),
                 Text(
-                  '${lastMinute.length} در دقیقه اخیر · ${data.readings.length} کل اندازه‌گیری',
+                  l10n.tp('statsLine', {
+                    'count': '${lastMinute.length}',
+                    'total': '${data.readings.length}',
+                  }),
                   style: const TextStyle(color: Colors.white38, fontSize: 12),
                 ),
                 Text(
-                  'اوج/دقیقه $peak dBm',
+                  l10n.tp('peakLine', {'peak': '$peak'}),
                   style: const TextStyle(color: Colors.white38, fontSize: 12),
                 ),
                 if (stale)
-                  const Padding(
-                    padding: EdgeInsets.only(top: 8),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 8),
                     child: Text(
-                      'قدیمی — کمی صبر کن تا تازه شود',
-                      style: TextStyle(color: Colors.orangeAccent, fontSize: 12),
+                      l10n.t('staleWarning'),
+                      style: const TextStyle(color: Colors.orangeAccent, fontSize: 12),
                     ),
                   ),
                 const Spacer(),
-                const Text(
-                  'چند متر جابه‌جا شو، بعد حدود ۱۰ ثانیه بی‌حرکت بمان',
-                  style: TextStyle(color: Colors.white24, fontSize: 12),
+                Text(
+                  l10n.t('moveHint'),
+                  style: const TextStyle(color: Colors.white24, fontSize: 12),
                   textAlign: TextAlign.center,
                 ),
               ],
