@@ -16,11 +16,11 @@ void main() {
       expect(far, greaterThan(near));
     });
 
-    test('open space exponent yields smaller distance than cluttered indoor', () {
+    test('indoor cluttered exponent yields smaller distance than open space', () {
       final rssi = -75.0;
       final open = PathLossModel.openSpace.distanceMeters(rssi);
       final cluttered = PathLossModel.indoorCluttered.distanceMeters(rssi);
-      expect(open, lessThan(cluttered));
+      expect(cluttered, lessThan(open));
     });
   });
 }
