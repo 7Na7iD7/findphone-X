@@ -6,15 +6,17 @@ import '../../l10n/app_localizations.dart';
 
 class _Developer {
   final String name;
-  final String githubUrl;
-  const _Developer({required this.name, required this.githubUrl});
+  final String? githubUrl;
+  const _Developer({required this.name, this.githubUrl});
 
-  String get handle => '@${githubUrl.split('/').last}';
+  String? get handle =>
+      githubUrl == null ? null : '@${githubUrl!.split('/').last}';
 }
 
 const _developers = [
   _Developer(name: 'Navid Afzali', githubUrl: 'https://github.com/7Na7iD7'),
   _Developer(name: 'Niki Farzami', githubUrl: 'https://github.com/nikifarzami'),
+  _Developer(name: 'Rozhan Pourshad'),
 ];
 
 class SettingsScreen extends ConsumerWidget {
@@ -81,7 +83,9 @@ class SettingsScreen extends ConsumerWidget {
               padding: const EdgeInsets.only(bottom: 10),
               child: _DeveloperTile(
                 developer: dev,
-                onTap: () => _openGithub(context, dev.githubUrl),
+                onTap: dev.githubUrl == null
+                    ? null
+                    : () => _openGithub(context, dev.githubUrl!),
               ),
             ),
           ),
@@ -179,12 +183,13 @@ class _LanguageSwitch extends StatelessWidget {
 
 class _DeveloperTile extends StatelessWidget {
   final _Developer developer;
-  final VoidCallback onTap;
+  final VoidCallback? onTap;
 
   const _DeveloperTile({required this.developer, required this.onTap});
 
   @override
   Widget build(BuildContext context) {
+    final hasLink = onTap != null;
     return Material(
       color: Colors.white.withValues(alpha: 0.04),
       borderRadius: BorderRadius.circular(14),
@@ -212,16 +217,17 @@ class _DeveloperTile extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(developer.name,
-                        style:
-                            const TextStyle(color: Colors.white, fontSize: 15)),
+                        style: const TextStyle(color: Colors.white, fontSize: 15)),
                     const SizedBox(height: 2),
-                    Text(developer.handle,
-                        style: const TextStyle(
-                            color: Colors.white38, fontSize: 12)),
+                    Text(
+                      developer.handle ?? 'GitHub —',
+                      style: const TextStyle(color: Colors.white38, fontSize: 12),
+                    ),
                   ],
                 ),
               ),
-              const Icon(Icons.open_in_new, color: Colors.white24, size: 18),
+              if (hasLink)
+                const Icon(Icons.open_in_new, color: Colors.white24, size: 18),
             ],
           ),
         ),

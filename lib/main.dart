@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'application/providers/settings_provider.dart';
 import 'l10n/app_localizations.dart';
 import 'presentation/screens/home_screen.dart';
+import 'presentation/screens/welcome_screen.dart';
 import 'services/background_scan_service.dart';
 
 Future<void> main() async {
@@ -17,8 +18,8 @@ class FindPhoneApp extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final language = ref.watch(appSettingsProvider.select((s) => s.language));
-    final locale = Locale(language.code);
+    final settings = ref.watch(appSettingsProvider);
+    final locale = Locale(settings.language.code);
 
     return MaterialApp(
       title: 'findphone X',
@@ -40,11 +41,26 @@ class FindPhoneApp extends ConsumerWidget {
       ),
       builder: (context, child) {
         return Directionality(
-          textDirection: language.isRtl ? TextDirection.rtl : TextDirection.ltr,
+          textDirection: settings.language.isRtl ? TextDirection.rtl : TextDirection.ltr,
           child: child!,
         );
       },
-      home: const HomeScreen(),
+
+      home: !settings.restored
+          ? const _SplashGate()
+          : (settings.hasSeenWelcome ? const HomeScreen() : const WelcomeScreen()),
+    );
+  }
+}
+
+class _SplashGate extends StatelessWidget {
+  const _SplashGate();
+
+  @override
+  Widget build(BuildContext context) {
+    return const Scaffold(
+      backgroundColor: Colors.black,
+      body: SizedBox.shrink(),
     );
   }
 }
