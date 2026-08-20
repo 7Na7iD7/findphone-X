@@ -415,13 +415,13 @@ Reliable cross-platform BLE scanning | Amazing ecosystem and tooling | Riverpod,
 
 ---
 
-## 👨‍💻 Developers
+## 👨‍💻 Developer
 
 <div align="center">
 
 | | |
 |:---:|:---:|
-| **Navid Afzali** | **Niki Farzami** |
+| **Navid Afzali**
 | [![GitHub](https://img.shields.io/badge/GitHub-7Na7iD7-181717?style=for-the-badge&logo=github&logoColor=white)](https://github.com/7Na7iD7)
 </div>
 
